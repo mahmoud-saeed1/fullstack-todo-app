@@ -2,18 +2,23 @@ import Input from "../components/ui/Input";
 import { useForm, SubmitHandler } from "react-hook-form";
 import InputErrorMessage from "../components/ui/InputErrorMessage";
 import { REGISTER_FORM } from "../data/index";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { RegisterSchema } from "../validations";
 
 interface IFormInput {
   username: string;
   email: string;
   password: string;
 }
+
 const Register = () => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<IFormInput>();
+  } = useForm<IFormInput>({
+    resolver: yupResolver(RegisterSchema),
+  });
 
   // Handlers
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
@@ -43,6 +48,7 @@ const Register = () => {
       </h2>
       <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
         {renderRegisterForm}
+        <Input type="submit" className="cursor-pointer" />
       </form>
     </div>
   );

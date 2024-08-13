@@ -1,0 +1,27 @@
+import * as yup from "yup";
+
+export const RegisterSchema = yup
+  .object({
+    username: yup
+      .string()
+      .required("userName is required!")
+      .min(3, "Username must be at least 3 characters long.")
+      .max(20, "Username cannot exceed 20 characters.")
+      .matches(
+        /^[a-zA-Z0-9_-] {3,20}$/,
+        "Username can only contain letters, numbers, underscores, and hyphens."
+      ),
+
+    email: yup
+      .string()
+      .required("email is required!")
+      .matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email format"),
+    password: yup
+      .string()
+      .required("password is required!")
+      .matches(
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+        "Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character "
+      ),
+  })
+  .required();
