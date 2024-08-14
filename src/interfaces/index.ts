@@ -1,19 +1,19 @@
-export interface IRegisterInput {
+export interface IRegisterInputs {
   name: "email" | "username" | "password";
   placeholder: string;
   type: string;
-  validation: {
+  validation?: {
     required?: boolean;
     minLength?: number;
     pattern?: RegExp;
   };
 }
 
-export interface ILoginInput {
+export interface ILogInFormInputs {
   name: "identifier" | "password";
   placeholder: string;
   type: string;
-  validation: {
+  validation?: {
     required?: boolean;
     minLength?: number;
     pattern?: RegExp;
@@ -31,8 +31,13 @@ export interface IErrorResponse {
   };
 }
 
-export interface IFormInput {
+export interface IRegisterFormValues {
   username: string;
   email: string;
+  password: string;
+}
+
+export interface ILogInFormValues {
+  identifier: string;
   password: string;
 }

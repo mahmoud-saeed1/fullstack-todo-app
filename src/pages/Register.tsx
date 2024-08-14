@@ -10,30 +10,32 @@ import { useState } from "react";
 import Button from "../components/ui/Button";
 import "react-toastify/dist/ReactToastify.css";
 import { AxiosError } from "axios";
-import { IErrorResponse, IFormInput } from "../interfaces";
+import { IErrorResponse, IRegisterFormValues } from "../interfaces";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
+  /*~~~~~~~~$ States $~~~~~~~~*/
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
-    formState: { errors },
-  } = useForm<IFormInput>({
+    formState: { errors }, //? for show error messages
+  } = useForm<IRegisterFormValues>({
     resolver: yupResolver(RegisterSchema),
   });
-  /*~~~~~~~~$ States $~~~~~~~~*/
-  const [isLoading, setIsLoading] = useState(false);
 
   /*~~~~~~~~$ Handlers $~~~~~~~~*/
-  const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-    // ** Loading state
+  const onSubmitHandler: SubmitHandler<IRegisterFormValues> = async (data) => {
+    // ** Loading case handling
     setIsLoading(true);
     try {
-      // ** fullfilled state
-      const response = await axiosInstance.post("auth/local/register", data);
-      if (response.status === 200) {
+      // ** fullfilled case handling
+      const { status } = await axiosInstance.post("auth/local/register", data);
+      if (status === 200) {
         toast.success("Registration successful!", {
           position: "top-right",
-          autoClose: 2000,
+          autoClose: 1000,
           hideProgressBar: false,
           closeOnClick: true,
           pauseOnHover: true,
@@ -42,9 +44,13 @@ const Register = () => {
           theme: "light",
           transition: Bounce,
         });
+
+        setTimeout(() => {
+          navigate("/login");
+        }, 1000);
       }
     } catch (error) {
-      // ** rejected state
+      // ** rejected case handling
       const errorObj = error as AxiosError<IErrorResponse>;
 
       toast.error(`${errorObj.response?.data.error.message}`, {
@@ -64,14 +70,10 @@ const Register = () => {
   };
 
   const renderRegisterForm = REGISTER_FORM.map(
-    ({ name, placeholder, type, validation }, idx) => {
+    ({ name, placeholder, type }, idx) => {
       return (
         <div key={idx}>
-          <Input
-            type={type}
-            placeholder={placeholder}
-            {...register(name, validation)}
-          />
+          <Input type={type} placeholder={placeholder} {...register(name)} />
           {errors[name] && <InputErrorMessage msg={errors[name]?.message} />}
         </div>
       );
@@ -83,7 +85,7 @@ const Register = () => {
       <h2 className="text-center mb-4 text-3xl font-semibold">
         Register to get access!
       </h2>
-      <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmitHandler)} className="space-y-4">
         {renderRegisterForm}
         <Button isLoading={isLoading} className="w-full">
           {!isLoading ? "Register" : "Loading..."}

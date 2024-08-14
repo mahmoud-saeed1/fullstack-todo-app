@@ -1,52 +1,32 @@
-import { ILoginInput, IRegisterInput } from "../interfaces";
+import { ILogInFormInputs, IRegisterInputs } from "../interfaces";
 
-export const REGISTER_FORM: IRegisterInput[] = [
+export const REGISTER_FORM: IRegisterInputs[] = [
   {
     name: "username",
     placeholder: "Username",
     type: "text",
-    validation: {
-      required: true,
-      minLength: 5,
-    },
   },
   {
     name: "email",
     placeholder: "Email",
     type: "email",
-    validation: {
-      required: true,
-      pattern: /^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/,
-    },
   },
   {
     name: "password",
     placeholder: "Password",
     type: "password",
-    validation: {
-      required: true,
-      minLength: 6,
-    },
   },
 ];
 
-export const LOGIN_FORM: ILoginInput[] = [
+export const LOGIN_FORM: ILogInFormInputs[] = [
   {
     name: "identifier",
     placeholder: "Email",
     type: "email",
-    validation: {
-      required: true,
-      pattern: /^[^@ ]+@[^@ ]+\.[^@ .]{2,}$/,
-    },
   },
   {
     name: "password",
     placeholder: "Password",
     type: "password",
-    validation: {
-      required: true,
-      minLength: 6,
-    },
   },
 ];
