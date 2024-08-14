@@ -4,12 +4,13 @@ import InputErrorMessage from "../components/ui/InputErrorMessage";
 import { REGISTER_FORM } from "../data/index";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { RegisterSchema } from "../validations";
-
-interface IFormInput {
-  username: string;
-  email: string;
-  password: string;
-}
+import axiosInstance from "../config/axios.config";
+import { toast, Bounce } from "react-toastify";
+import { useState } from "react";
+import Button from "../components/ui/Button";
+import "react-toastify/dist/ReactToastify.css";
+import { AxiosError } from "axios";
+import { IErrorResponse, IFormInput } from "../interfaces";
 
 const Register = () => {
   const {
@@ -19,13 +20,49 @@ const Register = () => {
   } = useForm<IFormInput>({
     resolver: yupResolver(RegisterSchema),
   });
+  /*~~~~~~~~$ States $~~~~~~~~*/
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Handlers
+  /*~~~~~~~~$ Handlers $~~~~~~~~*/
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-    console.log("DATA", data);
+    // ** Loading state
+    setIsLoading(true);
+    try {
+      // ** fullfilled state
+      const response = await axiosInstance.post("auth/local/register", data);
+      if (response.status === 200) {
+        toast.success("Registration successful!", {
+          position: "top-right",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+      }
+    } catch (error) {
+      // ** rejected state
+      const errorObj = error as AxiosError<IErrorResponse>;
+
+      toast.error(`${errorObj.response?.data.error.message}`, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  // Renders
   const renderRegisterForm = REGISTER_FORM.map(
     ({ name, placeholder, type, validation }, idx) => {
       return (
@@ -48,7 +85,9 @@ const Register = () => {
       </h2>
       <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
         {renderRegisterForm}
-        <Input type="submit" className="cursor-pointer" />
+        <Button isLoading={isLoading} className="w-full">
+          {!isLoading ? "Register" : "Loading..."}
+        </Button>
       </form>
     </div>
   );

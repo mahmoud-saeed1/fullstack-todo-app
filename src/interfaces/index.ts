@@ -30,3 +30,9 @@ export interface IErrorResponse {
     message?: string;
   };
 }
+
+export interface IFormInput {
+  username: string;
+  email: string;
+  password: string;
+}
