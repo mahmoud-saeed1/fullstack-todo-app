@@ -1,3 +1,5 @@
+import { AxiosRequestConfig } from "axios";
+
 export interface IRegisterInputs {
   name: "email" | "username" | "password";
   placeholder: string;
@@ -41,3 +43,10 @@ export interface ILogInFormValues {
   identifier: string;
   password: string;
 }
+
+export interface IUseReactQuery {
+  queryKey: string[];
+  url: string;
+  config?: AxiosRequestConfig;
+}
+

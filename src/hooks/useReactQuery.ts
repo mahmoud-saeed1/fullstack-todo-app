@@ -1,12 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import axiosInstance from "../config/axios.config";
-import { AxiosRequestConfig } from "axios";
-
-interface IUseReactQuery {
-  queryKey: string[];
-  url: string;
-  config?: AxiosRequestConfig;
-}
+import { IUseReactQuery } from "../interfaces";
 
 const useReactQuery = ({ queryKey, url, config }: IUseReactQuery) => {
   return useQuery({

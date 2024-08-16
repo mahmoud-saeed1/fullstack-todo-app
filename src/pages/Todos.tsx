@@ -1,5 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
-import axiosInstance from "../config/axios.config";
+import useReactQuery from "../hooks/useReactQuery";
 
 const Todos = () => {
   /*~~~~~~~~$ Get JWT Key From Local Storage $~~~~~~~~*/
@@ -8,14 +7,10 @@ const Todos = () => {
   const userData = userDataString ? JSON.parse(userDataString) : null;
 
   /*~~~~~~~~$ React Query $~~~~~~~~*/
-  const { isPending, error, data } = useQuery({
+  const { isPending, error, data } = useReactQuery({
     queryKey: ["todos"],
-    queryFn: async () => {
-      const { data } = await axiosInstance.get("users/me?populate=todos", {
-        headers: { Authorization: `Bearer ${userData.jwt}` },
-      });
-      return data;
-    },
+    url: "users/me?populate=todos",
+    config: { headers: { Authorization: `Bearer ${userData.jwt}` } },
   });
 
   if (isPending) return "Loading...";
