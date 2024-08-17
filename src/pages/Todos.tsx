@@ -1,4 +1,10 @@
+import { motion } from "framer-motion";
 import useReactQuery from "../hooks/useReactQuery";
+import { ITodo } from "../interfaces";
+import Input from "../components/ui/Input";
+import "../index.css";
+import Button from "../components/ui/Button";
+import { VTodoVariants } from "../animations";
 
 const Todos = () => {
   /*~~~~~~~~$ Get JWT Key From Local Storage $~~~~~~~~*/
@@ -14,15 +20,37 @@ const Todos = () => {
   });
 
   if (isPending) return "Loading...";
-
   if (error) return "An error has occurred: " + error.message;
 
   return (
-    <div>
+    <div className="flex flex-col items-center justify-center p-6">
       {data.todos.length ? (
-        data.todos.map((todo) => <h1 key={todo.id}>{todo.title}</h1>)
+        data.todos.map(({ id, title }: ITodo) => (
+          <motion.div
+            key={id}
+            variants={VTodoVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            transition={{ duration: 0.5, type: "spring" }}
+            className="todo-container"
+          >
+            {/*~~~~~~~~$ Customized Checkbox $~~~~~~~~*/}
+            <Input type="checkbox" className="todo-checkbox" />
+
+            {/*~~~~~~~~$ Todo Title $~~~~~~~~*/}
+            <h1 className="todo-title">{title}</h1>
+
+            {/*~~~~~~~~$ Action Buttons $~~~~~~~~*/}
+            <div className="todo-actions">
+              <Button className="todo-update-button todo-btn">Update</Button>
+
+              <Button className="todo-delete-button todo-btn">Delete</Button>
+            </div>
+          </motion.div>
+        ))
       ) : (
-        <h1>no todos added</h1>
+        <h1 className="text-xl font-bold text-gray-500">No todos added</h1>
       )}
     </div>
   );

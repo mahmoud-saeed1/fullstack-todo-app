@@ -1,3 +1,38 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/*~~~~~~~~$ Start Todos Styling $~~~~~~~~*/
+.todo-container {
+    @apply flex items-center justify-between w-full p-4 mb-4 bg-white rounded-lg shadow-lg;
+}
+
+.todo-checkbox {
+    @apply w-5 h-5 text-blue-600 bg-gray-200 rounded border-gray-300 focus:ring-blue-500 cursor-pointer;
+}
+  
+  .todo-title {
+      @apply flex-grow ml-4 text-lg font-semibold text-gray-700;
+    }
+    
+    .todo-actions {
+        @apply flex space-x-2;
+    }
+    
+    .todo-btn{
+        @apply px-4 py-2 text-sm text-white font-semibold tracking-wider rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2
+    }
+
+    .todo-btn:hover{
+        @apply scale-110 transition-all duration-300 ease-in-out
+    }
+
+    .todo-update-button {
+        @apply  bg-green-500 focus:ring-green-400 !important;
+    }
+    
+    .todo-delete-button {
+        @apply  bg-red-500 focus:ring-red-400 !important;
+    }
+/*~~~~~~~~$ End Todos Styling $~~~~~~~~*/
+    

@@ -50,3 +50,9 @@ export interface IUseReactQuery {
   config?: AxiosRequestConfig;
 }
 
+export interface ITodo {
+  id: number;
+  title: string;
+  description?: string;
+  completed?: boolean;
+}
