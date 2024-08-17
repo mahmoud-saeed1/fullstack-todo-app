@@ -5,8 +5,44 @@ import Input from "../components/ui/Input";
 import "../index.css";
 import Button from "../components/ui/Button";
 import { VTodoVariants } from "../animations";
+import { useState } from "react";
+import Modal from "../components/ui/Modal";
 
 const Todos = () => {
+  /*~~~~~~~~$ States $~~~~~~~~*/
+  const [openTodo, setOpenTodo] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  // const [todoToEdit, setTodoToEdit] = useState<ITodo>({
+  //   id: 0,
+  //   title: "",
+  //   description: "",
+  // });
+
+  /*~~~~~~~~$ Handlers $~~~~~~~~*/
+  // const OpenEditModalHandler = (todo: ITodo) => {
+  //   setOpenEditModal(true);
+  //   setTodoToEdit(todo);
+  // };
+
+  const openTodoHandler = () => setOpenTodo(true);
+  const closeTodoHandler = () => setOpenTodo(false);
+  const OPenEditModalHandler = () => setOpenEditModal(true);
+  const CloseEditModalHandler = () => setOpenEditModal(false);
+  const OpenDeleteModalHandler = () => setOpenDeleteModal(true);
+  const CloseDeleteModalHandler = () => setOpenDeleteModal(false);
+
+  const onCancelHandler = () => {
+    setOpenTodo(false);
+    setOpenEditModal(false);
+    setOpenDeleteModal(false);
+    // setTodoToEdit({
+    //   id: 0,
+    //   title: "",
+    //   description: "",
+    // });
+  };
+
   /*~~~~~~~~$ Get JWT Key From Local Storage $~~~~~~~~*/
   const storageKey = "loggedInUser";
   const userDataString = localStorage.getItem(storageKey);
@@ -25,7 +61,7 @@ const Todos = () => {
   return (
     <div className="flex flex-col items-center justify-center p-6">
       {data.todos.length ? (
-        data.todos.map(({ id, title }: ITodo) => (
+        data.todos.map(({ id, title, description }: ITodo) => (
           <motion.div
             key={id}
             variants={VTodoVariants}
@@ -39,19 +75,70 @@ const Todos = () => {
             <Input type="checkbox" className="todo-checkbox" />
 
             {/*~~~~~~~~$ Todo Title $~~~~~~~~*/}
-            <h1 className="todo-title">{title}</h1>
+            <Button className="todo-title" onClick={openTodoHandler}>
+              {title}
+            </Button>
 
             {/*~~~~~~~~$ Action Buttons $~~~~~~~~*/}
             <div className="todo-actions">
-              <Button className="todo-update-button todo-btn">Update</Button>
+              <Button
+                className="todo-update-button todo-btn"
+                onClick={OPenEditModalHandler}
+              >
+                Update
+              </Button>
 
-              <Button className="todo-delete-button todo-btn">Delete</Button>
+              <Button
+                className="todo-delete-button todo-btn"
+                onClick={OpenDeleteModalHandler}
+              >
+                Delete
+              </Button>
             </div>
+
+            {/*~~~~~~~~$ Todo Modal $~~~~~~~~*/}
+            <Modal
+              isOpen={openTodo}
+              closeModal={closeTodoHandler}
+              title={title}
+              description={description}
+            >
+              <Button
+                onClick={closeTodoHandler}
+                className="mt-3 w-full capitalize tracking-wider"
+              >
+                close
+              </Button>
+            </Modal>
           </motion.div>
         ))
       ) : (
         <h1 className="text-xl font-bold text-gray-500">No todos added</h1>
       )}
+      {/*~~~~~~~~$ Edit Modal $~~~~~~~~*/}
+      <Modal
+        isOpen={openEditModal}
+        closeModal={CloseEditModalHandler}
+        title="edit modal"
+      >
+        <div className="todo-actions">
+          <Button className="todo-update-button todo-btn">Update</Button>
+
+          <Button className="todo-cancel-btn todo-btn" onClick={onCancelHandler}>Cancel</Button>
+        </div>
+      </Modal>
+
+      {/*~~~~~~~~$ Delete Modal $~~~~~~~~*/}
+      <Modal
+        isOpen={openDeleteModal}
+        closeModal={CloseDeleteModalHandler}
+        title="delete modal"
+      >
+        <div className="todo-actions">
+          <Button className="todo-delete-button todo-btn">Delete</Button>
+          <Button className="todo-cancel-btn todo-btn" onClick={onCancelHandler}>Cancel</Button>
+        </div>
+      </Modal>
     </div>
   );
 };
