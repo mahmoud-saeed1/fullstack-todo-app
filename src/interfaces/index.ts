@@ -1,26 +1,29 @@
 import { AxiosRequestConfig } from "axios";
+import {
+  TLogInFormNameInput,
+  TRegisterFormNameInput,
+  TTodoCategories,
+} from "../types";
 
-export interface IRegisterInputs {
-  name: "email" | "username" | "password";
-  placeholder: string;
-  type: string;
-  validation?: {
-    required?: boolean;
-    minLength?: number;
-    pattern?: RegExp;
-  };
+// ** Shared validation interface
+interface IValidationRules {
+  required?: boolean;
+  minLength?: number;
+  pattern?: RegExp;
 }
 
-export interface ILogInFormInputs {
-  name: "identifier" | "password";
+// ** Generic form input interface
+interface IFormInput<T> {
+  name: T;
   placeholder: string;
   type: string;
-  validation?: {
-    required?: boolean;
-    minLength?: number;
-    pattern?: RegExp;
-  };
+  validation?: IValidationRules;
 }
+
+// ** Specific form inputs
+export type IRegisterInputs = IFormInput<TRegisterFormNameInput>;
+export type ILogInFormInputs = IFormInput<TLogInFormNameInput>;
+export type IEditeFormInputs = IFormInput<string>;
 
 export interface IErrorResponse {
   error: {
@@ -39,6 +42,12 @@ export interface IRegisterFormValues {
   password: string;
 }
 
+export interface IEditTodoFormValues {
+  title:string;
+  description?: string;
+  category?: TTodoCategories;
+}
+
 export interface ILogInFormValues {
   identifier: string;
   password: string;
@@ -52,7 +61,24 @@ export interface IUseReactQuery {
 
 export interface ITodo {
   id: number;
+  category?: TTodoCategories;
   title: string;
   description?: string;
   completed?: boolean;
+}
+
+export interface ITodoCategory {
+  id: number;
+  title: TTodoCategories;
+}
+
+
+export interface IEditTodoProps {
+  todoId: number;
+  currentTitle: string;
+  currentDescription?: string;
+  currentCategory?: string;
+  categories: ITodoCategory[];
+  onClose: () => void;
+  onUpdate: () => void;
 }

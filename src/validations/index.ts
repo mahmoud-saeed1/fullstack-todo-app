@@ -7,7 +7,10 @@ export const RegisterSchema = yup
       .required("userName is required!")
       .min(3, "Username must be at least 3 characters long.")
       .max(20, "Username cannot exceed 20 characters.")
-      .matches(/^[a-zA-Z0-9_-]{3,20}$/, "Username can only contain letters, numbers, underscores, and hyphens."),
+      .matches(
+        /^[a-zA-Z0-9_-]{3,20}$/,
+        "Username can only contain letters, numbers, underscores, and hyphens."
+      ),
     email: yup
       .string()
       .required("email is required!")
@@ -15,11 +18,11 @@ export const RegisterSchema = yup
     password: yup
       .string()
       .required("password is required!")
-      .min(6, "Password should be at least 6 characters.")
-      // .matches(
-      //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-      //   "Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character"
-      // ),
+      .min(6, "Password should be at least 6 characters."),
+    // .matches(
+    //   /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+    //   "Password must contain at least one lowercase letter, one uppercase letter, one number, and one special character"
+    // ),
   })
   .required();
 
@@ -32,3 +35,28 @@ export const LogInSchema = yup
     password: yup.string().required("Password is required!"),
   })
   .required();
+
+export const EditSchema = yup.object({
+  title: yup
+    .string()
+    .required("todo title is required!")
+    .matches(
+      /^[a-zA-Z0-9_-]{3,20}$/,
+      "Username can only contain letters, numbers, underscores, and hyphens."
+    ),
+  category: yup.string().required("please select a category!"),
+});
+
+// validations.ts
+export const EditTodoSchema = yup.object({
+  title: yup
+    .string()
+    .required("Todo title is required!")
+    .matches(
+      /^[a-zA-Z0-9_-]{3,20}$/,
+      "Title can only contain letters, numbers, underscores, and hyphens."
+    ),
+  description: yup.string(),
+  category: yup.string().optional(),
+});
+

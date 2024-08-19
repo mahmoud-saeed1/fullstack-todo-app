@@ -8,17 +8,17 @@ import axiosInstance from "../config/axios.config";
 import { toast, Bounce } from "react-toastify";
 import { useState } from "react";
 import Button from "../components/ui/Button";
-import "react-toastify/dist/ReactToastify.css";
 import { AxiosError } from "axios";
 import { IErrorResponse, IRegisterFormValues } from "../interfaces";
 import { useNavigate } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css";
 
 const Register = () => {
   /*~~~~~~~~$ States $~~~~~~~~*/
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const {
-    register,
+    register, //? to take inputs values
     handleSubmit,
     formState: { errors }, //? for show error messages
   } = useForm<IRegisterFormValues>({
