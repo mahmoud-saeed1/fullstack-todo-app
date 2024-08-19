@@ -43,9 +43,9 @@ export interface IRegisterFormValues {
 }
 
 export interface IEditTodoFormValues {
-  title:string;
+  title: string;
   description?: string;
-  category?: TTodoCategories;
+  category?: string;
 }
 
 export interface ILogInFormValues {
@@ -70,15 +70,4 @@ export interface ITodo {
 export interface ITodoCategory {
   id: number;
   title: TTodoCategories;
-}
-
-
-export interface IEditTodoProps {
-  todoId: number;
-  currentTitle: string;
-  currentDescription?: string;
-  currentCategory?: string;
-  categories: ITodoCategory[];
-  onClose: () => void;
-  onUpdate: () => void;
 }

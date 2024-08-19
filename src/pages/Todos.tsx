@@ -9,10 +9,12 @@ import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
 import Modal from "../components/ui/Modal";
 import Select from "../components/ui/Select";
-import { ITodo, IErrorResponse, ITodoCategory } from "../interfaces";
+import { ITodo, IErrorResponse, ITodoCategory, IEditTodoFormValues } from "../interfaces";
 import { VTodoVariants } from "../animations";
 import { DEFAULT_TODO_OBJ, TODOS_CATEGORIES } from "../data";
 import Textarea from "../components/ui/Textarea";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { EditTodoSchema } from "../validations";
 
 const Todos = () => {
   /*~~~~~~~~$ States $~~~~~~~~*/
@@ -79,10 +81,12 @@ const Todos = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ITodo>();
+  } = useForm<IEditTodoFormValues>({
+    resolver: yupResolver(EditTodoSchema),
+  });
 
   /*~~~~~~~~$ Handle Todo Completion Toggle $~~~~~~~~*/
-  const updateTodoHandler: SubmitHandler<ITodo> = async (data) => {
+  const updateTodoHandler: SubmitHandler<IEditTodoFormValues> = async (data) => {
     setIsLoading(true);
     try {
       const { status } = await axiosInstance.put(

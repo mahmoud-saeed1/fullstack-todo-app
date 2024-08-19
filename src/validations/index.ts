@@ -36,27 +36,8 @@ export const LogInSchema = yup
   })
   .required();
 
-export const EditSchema = yup.object({
-  title: yup
-    .string()
-    .required("todo title is required!")
-    .matches(
-      /^[a-zA-Z0-9_-]{3,20}$/,
-      "Username can only contain letters, numbers, underscores, and hyphens."
-    ),
-  category: yup.string().required("please select a category!"),
-});
-
-// validations.ts
 export const EditTodoSchema = yup.object({
-  title: yup
-    .string()
-    .required("Todo title is required!")
-    .matches(
-      /^[a-zA-Z0-9_-]{3,20}$/,
-      "Title can only contain letters, numbers, underscores, and hyphens."
-    ),
-  description: yup.string(),
+  title: yup.string().required("Todo title is required!"),
+  description: yup.string().optional(),
   category: yup.string().optional(),
 });
-
