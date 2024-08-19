@@ -9,22 +9,37 @@ import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
 import Modal from "../components/ui/Modal";
 import Select from "../components/ui/Select";
-import { ITodo, IErrorResponse, ITodoCategory, IEditTodoFormValues } from "../interfaces";
+import {
+  ITodo,
+  IErrorResponse,
+  ITodoCategory,
+  IEditTodoFormValues,
+} from "../interfaces";
 import { VTodoVariants } from "../animations";
 import { DEFAULT_TODO_OBJ, TODOS_CATEGORIES } from "../data";
 import Textarea from "../components/ui/Textarea";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { EditTodoSchema } from "../validations";
+import { CreateTodoSchema, EditTodoSchema } from "../validations";
 
 const Todos = () => {
   /*~~~~~~~~$ States $~~~~~~~~*/
+  /*~~~~~~~~$ States $~~~~~~~~*/
   const [openTodo, setOpenTodo] = useState(false);
-  const [openEditModal, setOpenEditModal] = useState(false);
-  const [openDeleteModal, setOpenDeleteModal] = useState(false);
-  const [todoToEdit, setTodoToEdit] = useState<ITodo>(DEFAULT_TODO_OBJ);
+  const [openCreateModal, setOpenCreateModal] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [openEditModal, setOpenEditModal] = useState<boolean>(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState<boolean>(false);
+  const [todoToEdit, setTodoToEdit] = useState<ITodo>(DEFAULT_TODO_OBJ);
 
   /*~~~~~~~~$ Handlers $~~~~~~~~*/
+  const openCreateModalHandler = () => {
+    setOpenCreateModal(true);
+  };
+
+  const closeCreateModalHandler = () => {
+    setOpenCreateModal(false);
+  };
+
   const openTodoHandler = (todo: ITodo) => {
     setTodoToEdit(todo);
     setOpenTodo(true);
@@ -86,7 +101,9 @@ const Todos = () => {
   });
 
   /*~~~~~~~~$ Handle Todo Completion Toggle $~~~~~~~~*/
-  const updateTodoHandler: SubmitHandler<IEditTodoFormValues> = async (data) => {
+  const updateTodoHandler: SubmitHandler<IEditTodoFormValues> = async (
+    data
+  ) => {
     setIsLoading(true);
     try {
       const { status } = await axiosInstance.put(
@@ -210,11 +227,71 @@ const Todos = () => {
     }
   };
 
+  /*~~~~~~~~$ React Hook Form - Create Todo $~~~~~~~~*/
+  const {
+    register: createRegister,
+    handleSubmit: handleCreateSubmit,
+    formState: { errors: createErrors },
+  } = useForm<IEditTodoFormValues>({
+    resolver: yupResolver(CreateTodoSchema),
+  });
+
+  const createTodoHandler: SubmitHandler<IEditTodoFormValues> = async (
+    formData
+  ) => {
+    setIsLoading(true);
+    try {
+      const { status } = await axiosInstance.post(
+        "todos",
+        { data: { ...formData, user: userData.id } },
+        { headers: { Authorization: `Bearer ${userData.jwt}` } }
+      );
+
+      if (status === 200 || status === 201) {
+        toast.success("Todo created successfully!", {
+          position: "top-right",
+          autoClose: 1000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+
+        refetch();
+        closeCreateModalHandler();
+      }
+    } catch (error) {
+      const errorObj = error as AxiosError<IErrorResponse>;
+
+      toast.error(`${errorObj.response?.data.error.message}`, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   if (isPending) return "Loading...";
   if (error) return "An error has occurred: " + error.message;
 
   return (
     <div className="flex flex-col items-center justify-center p-6">
+      {/*~~~~~~~~$ Create Todo Button $~~~~~~~~*/}
+      <Button onClick={openCreateModalHandler} className="mb-4">
+        Add New Todo
+      </Button>
+
       {data?.todos?.length ? (
         data.todos.map((todo: ITodo) => (
           <motion.div
@@ -286,6 +363,57 @@ const Todos = () => {
         <Button onClick={closeTodoHandler} className="mt-3" fullWidth>
           Close
         </Button>
+      </Modal>
+
+      {/*~~~~~~~~$ Create Todo Modal $~~~~~~~~*/}
+      <Modal
+        isOpen={openCreateModal}
+        closeModal={closeCreateModalHandler}
+        title="Create New Todo"
+      >
+        <form
+          onSubmit={handleCreateSubmit(createTodoHandler)}
+          className="flex flex-col gap-4"
+        >
+          <Input
+            type="text"
+            placeholder="Title"
+            {...createRegister("title", { required: true })}
+          />
+          {createErrors.title && (
+            <p className="text-red-500">Title is required</p>
+          )}
+
+          <Textarea
+            placeholder="Description"
+            {...createRegister("description", { required: true })}
+          />
+          {createErrors.description && (
+            <p className="text-red-500">Description is required</p>
+          )}
+
+          <Select {...createRegister("category", { required: true })}>
+            {TODOS_CATEGORIES.map(({ id, title }: ITodoCategory) => (
+              <option key={id} value={title}>
+                {title}
+              </option>
+            ))}
+          </Select>
+
+          <div className="space-y-3">
+            <Button type="submit" variant="success" fullWidth>
+              {!isLoading ? "Create Todo" : "Creating..."}
+            </Button>
+            <Button
+              onClick={closeCreateModalHandler}
+              type="button"
+              variant="cancel"
+              fullWidth
+            >
+              Cancel
+            </Button>
+          </div>
+        </form>
       </Modal>
 
       {/*~~~~~~~~$ Edit Todo Modal $~~~~~~~~*/}
