@@ -12,6 +12,7 @@ import Select from "../components/ui/Select";
 import { ITodo, IErrorResponse, ITodoCategory } from "../interfaces";
 import { VTodoVariants } from "../animations";
 import { DEFAULT_TODO_OBJ, TODOS_CATEGORIES } from "../data";
+import Textarea from "../components/ui/Textarea";
 
 const Todos = () => {
   /*~~~~~~~~$ States $~~~~~~~~*/
@@ -80,7 +81,8 @@ const Todos = () => {
     formState: { errors },
   } = useForm<ITodo>();
 
-  const onSubmit: SubmitHandler<ITodo> = async (data) => {
+  /*~~~~~~~~$ Handle Todo Completion Toggle $~~~~~~~~*/
+  const updateTodoHandler: SubmitHandler<ITodo> = async (data) => {
     setIsLoading(true);
     try {
       const { status } = await axiosInstance.put(
@@ -124,8 +126,7 @@ const Todos = () => {
     }
   };
 
-  /*~~~~~~~~$ Handle Todo Completion Toggle $~~~~~~~~*/
-  const handleTodoCheck = async (todo: ITodo) => {
+  const checkTodoHandler = async (todo: ITodo) => {
     try {
       const { status } = await axiosInstance.put(
         `/todos/${todo.id}`,
@@ -167,16 +168,41 @@ const Todos = () => {
     }
   };
 
-  const onDeleteHandler = async () => {
-    if (todoToEdit) {
-      await fetch(`/todos/${todoToEdit.id}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${userData.jwt}`,
-        },
+  // handle delete todo
+  const deleteTodoHandler = async () => {
+    try {
+      await axiosInstance.delete(`/todos/${todoToEdit.id}`, {
+        headers: { Authorization: `Bearer ${userData.jwt}` },
       });
-      closeDeleteModalHandler();
       refetch();
+      closeDeleteModalHandler();
+
+      toast.success("Todo deleted successfully!", {
+        position: "top-right",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+    } catch (error) {
+      const errorObj = error as AxiosError<IErrorResponse>;
+      toast.error(`${errorObj.response?.data.error.message}`, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -203,7 +229,7 @@ const Todos = () => {
               type="checkbox"
               className="todo-checkbox mr-4"
               checked={todo.completed}
-              onChange={() => handleTodoCheck(todo)}
+              onChange={() => checkTodoHandler(todo)}
             />
 
             {/*~~~~~~~~$ Todo Title with Strikethrough $~~~~~~~~*/}
@@ -253,10 +279,7 @@ const Todos = () => {
         title={todoToEdit?.title}
         description={todoToEdit?.description}
       >
-        <Button
-          onClick={closeTodoHandler}
-          className="mt-3 w-full capitalize tracking-wider"
-        >
+        <Button onClick={closeTodoHandler} className="mt-3" fullWidth>
           Close
         </Button>
       </Modal>
@@ -267,7 +290,10 @@ const Todos = () => {
         closeModal={closeEditModalHandler}
         title="Edit Todo"
       >
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+        <form
+          onSubmit={handleSubmit(updateTodoHandler)}
+          className="flex flex-col gap-4"
+        >
           <Input
             type="text"
             placeholder="Title"
@@ -275,8 +301,7 @@ const Todos = () => {
             {...register("title", { required: true })}
           />
           {errors.title && <p className="text-red-500">Title is required</p>}
-          <Input
-            type="text"
+          <Textarea
             placeholder="Description"
             defaultValue={todoToEdit?.description}
             {...register("description", { required: true })}
@@ -296,19 +321,21 @@ const Todos = () => {
             ))}
           </Select>
 
-          <Button
-            type="submit"
-            className="mt-4 w-full capitalize tracking-wider"
-          >
-            {!isLoading ? "Save Changes" : "Saving..."}
-          </Button>
+          <div className="space-y-3">
+            <Button type="submit" variant={"success"} fullWidth>
+              {!isLoading ? "Save Changes" : "Saving..."}
+            </Button>
+
+            <Button
+              onClick={onCancelHandler}
+              type="button"
+              variant={"cancel"}
+              fullWidth
+            >
+              Cancel
+            </Button>
+          </div>
         </form>
-        <Button
-          onClick={onCancelHandler}
-          className="mt-3 w-full capitalize tracking-wider"
-        >
-          Cancel
-        </Button>
       </Modal>
 
       {/*~~~~~~~~$ Delete Confirmation Modal $~~~~~~~~*/}
@@ -318,18 +345,24 @@ const Todos = () => {
         title="Delete Todo"
         description={`Are you sure you want to delete "${todoToEdit?.title}"?`}
       >
-        <Button
-          onClick={onDeleteHandler}
-          className="mt-3 w-full capitalize tracking-wider bg-red-500 text-white"
-        >
-          Delete
-        </Button>
-        <Button
-          onClick={onCancelHandler}
-          className="mt-3 w-full capitalize tracking-wider"
-        >
-          Cancel
-        </Button>
+        <div className="space-y-3 mt-3">
+          <Button
+            onClick={deleteTodoHandler}
+            variant={"danger"}
+            size={"default"}
+            fullWidth
+          >
+            Delete
+          </Button>
+          <Button
+            onClick={onCancelHandler}
+            type="button"
+            variant={"cancel"}
+            fullWidth
+          >
+            Cancel
+          </Button>
+        </div>
       </Modal>
     </div>
   );
