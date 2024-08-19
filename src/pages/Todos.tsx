@@ -1,17 +1,17 @@
-import { motion } from "framer-motion";
-import useReactQuery from "../hooks/useReactQuery";
-import { IErrorResponse, ITodo } from "../interfaces";
-import Input from "../components/ui/Input";
-import Button from "../components/ui/Button";
-import { VTodoVariants } from "../animations";
 import { useState } from "react";
-import Modal from "../components/ui/Modal";
+import { motion } from "framer-motion";
 import { useForm, SubmitHandler } from "react-hook-form";
-import Select from "../components/ui/Select";
-import { DEFAULT_TODO_OBJ, TODOS_CATEGORIES } from "../data";
 import { Bounce, toast } from "react-toastify";
 import { AxiosError } from "axios";
 import axiosInstance from "../config/axios.config";
+import useReactQuery from "../hooks/useReactQuery";
+import Input from "../components/ui/Input";
+import Button from "../components/ui/Button";
+import Modal from "../components/ui/Modal";
+import Select from "../components/ui/Select";
+import { ITodo, IErrorResponse, ITodoCategory } from "../interfaces";
+import { VTodoVariants } from "../animations";
+import { DEFAULT_TODO_OBJ, TODOS_CATEGORIES } from "../data";
 
 const Todos = () => {
   /*~~~~~~~~$ States $~~~~~~~~*/
@@ -81,10 +81,8 @@ const Todos = () => {
   } = useForm<ITodo>();
 
   const onSubmit: SubmitHandler<ITodo> = async (data) => {
-    // ** Loading case handling
     setIsLoading(true);
     try {
-      // ** fullfilled case handling
       const { status } = await axiosInstance.put(
         `/todos/${todoToEdit.id}`,
         { data },
@@ -95,7 +93,7 @@ const Todos = () => {
       closeEditModalHandler();
 
       if (status === 200 && todoToEdit) {
-        toast.success("Todo Updated successful!", {
+        toast.success("Todo Updated successfully!", {
           position: "top-right",
           autoClose: 1000,
           hideProgressBar: false,
@@ -108,7 +106,6 @@ const Todos = () => {
         });
       }
     } catch (error) {
-      // ** rejected case handling
       const errorObj = error as AxiosError<IErrorResponse>;
 
       toast.error(`${errorObj.response?.data.error.message}`, {
@@ -124,6 +121,49 @@ const Todos = () => {
       });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  /*~~~~~~~~$ Handle Todo Completion Toggle $~~~~~~~~*/
+  const handleTodoCheck = async (todo: ITodo) => {
+    try {
+      const { status } = await axiosInstance.put(
+        `/todos/${todo.id}`,
+        { data: { completed: !todo.completed } },
+        { headers: { Authorization: `Bearer ${userData.jwt}` } }
+      );
+
+      if (status === 200) {
+        toast.success(
+          `Todo ${!todo.completed ? "completed" : "unmarked"} successfully!`,
+          {
+            position: "top-right",
+            autoClose: 1000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "light",
+            transition: Bounce,
+          }
+        );
+        refetch();
+      }
+    } catch (error) {
+      const errorObj = error as AxiosError<IErrorResponse>;
+
+      toast.error(`${errorObj.response?.data.error.message}`, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
     }
   };
 
@@ -145,7 +185,7 @@ const Todos = () => {
 
   return (
     <div className="flex flex-col items-center justify-center p-6">
-      {data.todos.length ? (
+      {data?.todos?.length ? (
         data.todos.map((todo: ITodo) => (
           <motion.div
             key={todo.id}
@@ -154,32 +194,48 @@ const Todos = () => {
             animate="visible"
             exit="exit"
             transition={{ duration: 0.5, type: "spring" }}
-            className="todo-container"
+            className={`todo-container mb-4 p-4 rounded-lg shadow-lg transition-all ${
+              todo.completed ? "bg-gray-200" : "bg-white"
+            }`}
           >
             {/*~~~~~~~~$ Customized Checkbox $~~~~~~~~*/}
-            <Input type="checkbox" className="todo-checkbox" />
+            <Input
+              type="checkbox"
+              className="todo-checkbox mr-4"
+              checked={todo.completed}
+              onChange={() => handleTodoCheck(todo)}
+            />
 
-            {/*~~~~~~~~$ Todo Title $~~~~~~~~*/}
+            {/*~~~~~~~~$ Todo Title with Strikethrough $~~~~~~~~*/}
             <Button
-              className="todo-title"
+              className={`todo-title text-lg font-semibold ${
+                todo.completed ? "line-through text-gray-500" : "text-black"
+              }`}
               onClick={() => openTodoHandler(todo)}
+              disabled={todo.completed}
             >
               {todo.title}
             </Button>
 
             {/*~~~~~~~~$ Action Buttons $~~~~~~~~*/}
-            <div className="todo-actions">
+            <div className="todo-actions flex ml-auto">
               <Button
-                className="todo-update-button todo-btn"
+                className={`todo-update-button todo-btn mr-2 ${
+                  todo.completed ? "opacity-50 cursor-not-allowed" : ""
+                }`}
                 onClick={() => openEditModalHandler(todo)}
                 isLoading={isLoading}
+                disabled={todo.completed}
               >
-                {!isLoading ? "Update" : "Loading..."}
+                Update
               </Button>
 
               <Button
-                className="todo-delete-button todo-btn"
+                className={`todo-delete-button todo-btn ${
+                  todo.completed ? "opacity-50 cursor-not-allowed" : ""
+                }`}
                 onClick={() => openDeleteModalHandler(todo)}
+                disabled={todo.completed}
               >
                 Delete
               </Button>
@@ -216,73 +272,64 @@ const Todos = () => {
             type="text"
             placeholder="Title"
             defaultValue={todoToEdit?.title}
-            {...register("title")}
+            {...register("title", { required: true })}
           />
           {errors.title && <p className="text-red-500">Title is required</p>}
           <Input
             type="text"
             placeholder="Description"
             defaultValue={todoToEdit?.description}
-            {...register("description")}
+            {...register("description", { required: true })}
           />
           {errors.description && (
             <p className="text-red-500">Description is required</p>
           )}
 
           <Select
-            className="mb-4"
-            defaultValue={todoToEdit.category}
-            {...register("category")}
+            defaultValue={todoToEdit?.category}
+            {...register("category", { required: true })}
           >
-            {TODOS_CATEGORIES.map((category) => (
-              <option key={category.id} value={category.title}>
-                {category.title}
+            {TODOS_CATEGORIES.map(({ id, title }: ITodoCategory) => (
+              <option key={id} value={title}>
+                {title}
               </option>
             ))}
           </Select>
-          <div className="todo-actions">
-            <Button
-              type="submit"
-              className="todo-update-button todo-btn"
-              isLoading={isLoading}
-            >
-              {!isLoading ? "Update" : "Loading..."}
-            </Button>
 
-            <Button
-              className="todo-cancel-btn todo-btn"
-              onClick={onCancelHandler}
-              type="button"
-              variant={"cancel"}
-            >
-              Cancel
-            </Button>
-          </div>
+          <Button
+            type="submit"
+            className="mt-4 w-full capitalize tracking-wider"
+          >
+            {!isLoading ? "Save Changes" : "Saving..."}
+          </Button>
         </form>
+        <Button
+          onClick={onCancelHandler}
+          className="mt-3 w-full capitalize tracking-wider"
+        >
+          Cancel
+        </Button>
       </Modal>
 
-      {/*~~~~~~~~$ Delete Todo Modal $~~~~~~~~*/}
+      {/*~~~~~~~~$ Delete Confirmation Modal $~~~~~~~~*/}
       <Modal
         isOpen={openDeleteModal}
         closeModal={closeDeleteModalHandler}
         title="Delete Todo"
+        description={`Are you sure you want to delete "${todoToEdit?.title}"?`}
       >
-        <div className="todo-actions">
-          <Button
-            className="todo-delete-button todo-btn"
-            onClick={onDeleteHandler}
-          >
-            Delete
-          </Button>
-          <Button
-            className="todo-cancel-btn todo-btn"
-            onClick={onCancelHandler}
-            type="button"
-            variant={"cancel"}
-          >
-            Cancel
-          </Button>
-        </div>
+        <Button
+          onClick={onDeleteHandler}
+          className="mt-3 w-full capitalize tracking-wider bg-red-500 text-white"
+        >
+          Delete
+        </Button>
+        <Button
+          onClick={onCancelHandler}
+          className="mt-3 w-full capitalize tracking-wider"
+        >
+          Cancel
+        </Button>
       </Modal>
     </div>
   );
