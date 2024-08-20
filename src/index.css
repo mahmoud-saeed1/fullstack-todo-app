@@ -3,7 +3,11 @@
 @tailwind utilities;
 
 /*~~~~~~~~$ Start Todos Styling $~~~~~~~~*/
-.todo-container {
+.todo-list{
+    @apply w-full
+}
+
+.todo-item {
     @apply flex items-center justify-between w-full p-4 mb-4 bg-white rounded-lg shadow-lg;
 }
 
@@ -15,7 +19,7 @@
       @apply p-0 bg-transparent flex-grow justify-start ml-4 text-lg font-semibold text-gray-700 !important;
     }
     
-    .todo-actions {
+    .todo-item__actions {
         @apply flex space-x-2;
     }
     
@@ -25,18 +29,6 @@
 
     .todo-btn:hover{
         @apply scale-110 transition-all duration-300 ease-in-out
-    }
-
-    .todo-update-button {
-        @apply  bg-green-500 focus:ring-green-400 !important;
-    }
-    
-    .todo-delete-button {
-        @apply  bg-red-500 focus:ring-red-400 !important;
-    }
-
-    .todo-cancel-btn{
-        @apply  bg-gray-400 focus:ring-gray-400 !important;
     }
 
 /*~~~~~~~~$ End Todos Styling $~~~~~~~~*/

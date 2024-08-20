@@ -71,3 +71,85 @@ export interface ITodoCategory {
   id: number;
   title: TTodoCategories;
 }
+
+interface IUser {
+  blocked?: boolean;
+  confirmed?: boolean;
+  createdAt?: string; // ISO 8601 format
+  email?: string;
+  id?: number;
+  provider?: string;
+  updatedAt?: string; // ISO 8601 format
+  username?: string;
+}
+
+export interface IAuthResponse {
+  jwt?: string;
+  user?: IUser;
+}
+
+export interface ITodoActionsProps {
+  todo: ITodo;
+  isLoading: boolean;
+  openUpdateModalHandler: () => void;
+  OpenDeleteModalHandler: () => void;
+}
+
+export interface ITodoItem {
+  className?: string;
+  todo: ITodo;
+  isLoading: boolean;
+  userData: IAuthResponse;
+  openUpdateModalHandler: (todo: ITodo) => void;
+  OpenDeleteModalHandler: (todo: ITodo) => void;
+  OpenTodoHandler: (todo: ITodo) => void;
+  refetch: () => void;
+}
+
+export interface ITodoList {
+  todos: ITodo[];
+  isLoading: boolean;
+  userData: IAuthResponse;
+  openUpdateModalHandler: (todo: ITodo) => void;
+  OpenDeleteModalHandler: (todo: ITodo) => void;
+  OpenTodoHandler: (todo: ITodo) => void;
+  refetch: () => void;
+}
+
+export interface ICheckTodo {
+  className?: string;
+  todo: ITodo;
+  userData: IAuthResponse;
+  refetch: () => void;
+}
+
+export interface ICreateTodoModal {
+  isOpen: boolean;
+  isLoading: boolean;
+  userData: IAuthResponse;
+  refetch: () => void;
+  setIsLoading: (loading: boolean) => void;
+  closeCreateModalHandler: () => void;
+  onCancelHandler: () => void;
+}
+export interface IUpdateTodoModal {
+  isOpen: boolean;
+  isLoading: boolean;
+  todoToEdit: ITodo;
+  userData: IAuthResponse;
+  refetch: () => void;
+  setIsLoading: (loading: boolean) => void;
+  closeUpdateModalHandler: () => void;
+  onCancelHandler: () => void;
+}
+
+export interface IDeleteTodoModal {
+  isOpen: boolean;
+  isLoading: boolean;
+  userData: IAuthResponse;
+  todoToEdit: ITodo;
+  refetch: () => void;
+  setIsLoading: (loading: boolean) => void;
+  closeDeleteModalHandler: () => void;
+  onCancelHandler: () => void;
+}
