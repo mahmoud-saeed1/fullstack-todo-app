@@ -36,14 +36,15 @@ export const LogInSchema = yup
   })
   .required();
 
-export const EditTodoSchema = yup.object({
-  title: yup.string().required("Todo title is required!"),
-  description: yup.string().optional(),
-  category: yup.string().optional(),
-});
-
-export const CreateTodoSchema = yup.object({
-  title: yup.string().required("Todo title is required!"),
-  description: yup.string().optional(),
-  category: yup.string().optional(),
-});
+  export const CreateTodoSchema = yup.object({
+    title: yup.string().required("Todo title is required!"),
+    description: yup.string().optional(),
+    category: yup.string().optional(),
+  });
+  
+  export const UpdateTodoSchema = yup.object({
+    title: yup.string().required("Todo title is required!"),
+    description: yup.string().optional(),
+    category: yup.string().optional(),
+  });
+  

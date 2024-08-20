@@ -12,7 +12,7 @@ const InputErrorMessage = ({ msg }: IProps) => {
         initial="initial"
         animate="animate"
         transition={{duration:0.3,ease:"easeInOut"}}
-        className="block text-red-700 font-semibold text-sm"
+        className="block text-[#c2344d] font-semibold text-sm"
       >
         {msg}
       </m.span>

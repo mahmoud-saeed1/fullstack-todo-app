@@ -15,7 +15,7 @@ import Textarea from "./ui/Textarea";
 import Select from "./ui/Select";
 import { TODOS_CATEGORIES } from "../data";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { EditTodoSchema } from "../validations";
+import { UpdateTodoSchema } from "../validations";
 
 const EditTodoModal = ({
   isOpen,
@@ -32,7 +32,7 @@ const EditTodoModal = ({
     handleSubmit,
     formState: { errors },
   } = useForm<IEditTodoFormValues>({
-    resolver: yupResolver(EditTodoSchema),
+    resolver: yupResolver(UpdateTodoSchema),
   });
 
   /*~~~~~~~~$ Handle Todo Completion Toggle $~~~~~~~~*/
@@ -42,7 +42,7 @@ const EditTodoModal = ({
     setIsLoading(true);
     try {
       const { status } = await axiosInstance.put(
-        `/todos/${todoToEdit.id}`,
+        `todos/${todoToEdit.id}`,
         { data },
         { headers: { Authorization: `Bearer ${userData.jwt}` } }
       );

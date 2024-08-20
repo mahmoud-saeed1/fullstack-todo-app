@@ -61,10 +61,16 @@ export interface IUseReactQuery {
 
 export interface ITodo {
   id: number;
-  category?: TTodoCategories;
+  category?: string; 
   title: string;
   description?: string;
   completed?: boolean;
+}
+
+export interface IDynamicFrom{
+  category?: string; 
+  title: string;
+  description?: string;
 }
 
 export interface ITodoCategory {
@@ -152,4 +158,41 @@ export interface IDeleteTodoModal {
   setIsLoading: (loading: boolean) => void;
   closeDeleteModalHandler: () => void;
   onCancelHandler: () => void;
+}
+
+export interface IFormComponent {
+  type: "create" | "edit";
+  todo?: ITodo;
+  isLoading?: boolean;
+  refetch?: () => void;
+  setIsLoading?: (loading: boolean) => void;
+  userData?: IAuthResponse;
+  closeHandler: () => void;
+  onCancel?: () => void;
+}
+
+export interface ITodoModal {
+  type: "view" | "create" | "edit" | "delete";
+  isOpen: boolean;
+  todo?: ITodo;
+  closeHandler: () => void;
+  refetch?: () => void;
+  isLoading?: boolean;
+  onCancel?: () => void;
+  setIsLoading?: (loading: boolean) => void;
+  userData?: IAuthResponse;
+}
+
+export interface ITodoModals {
+  openCreateModal: boolean;
+  openUpdateModal: boolean;
+  openDeleteModal: boolean;
+  openTodoModal: boolean;
+  selectedTodo: ITodo | null;
+  isLoading: boolean;
+  refetch: () => void;
+  userData?: IAuthResponse;
+  setIsLoading: (isLoading: boolean) => void;
+  handleModalClose: (type: "create" | "update" | "delete" | "view") => void; // Updated type
+  resetTodo: () => void;
 }
