@@ -1,7 +1,6 @@
 // !~~~~~~~~$ Dynamic Way to Do CRUD Operation $~~~~~~~~!
 import { useState } from "react";
 import useReactQuery from "../hooks/useReactQuery";
-import Button from "../components/ui/Button";
 import { ITodo } from "../interfaces";
 import { DEFAULT_TODO_OBJ } from "../data";
 import TodoList from "../components/TodoList";
@@ -9,6 +8,7 @@ import useModal from "../hooks/useModal";
 import TodoModals from "../components/TodoModals";
 import TodoSkeleton from "../components/TodoSkeleton";
 import ErrorHandler from "../components/errors/ErrorHandler";
+import NoTodos from "../components/NoTodo";
 
 const Todos = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -40,9 +40,6 @@ const Todos = () => {
 
   return (
     <div className="flex flex-col items-center justify-center p-6">
-      <Button onClick={() => handleModalOpen("create")} className="mb-4">
-        Add New Todo
-      </Button>
 
       {data?.todos?.length ? (
         <TodoList
@@ -59,7 +56,7 @@ const Todos = () => {
           refetch={refetch}
         />
       ) : (
-        <h1 className="text-xl font-bold text-gray-500">No todos added</h1>
+        <NoTodos onAddTodo={() => handleModalOpen("create")} />
       )}
 
       <TodoModals
@@ -80,6 +77,7 @@ const Todos = () => {
 };
 
 export default Todos;
+
 
 // !~~~~~~~~$ Static Way to Do CRUD Operation $~~~~~~~~!
 

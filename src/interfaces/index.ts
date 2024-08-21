@@ -4,6 +4,7 @@ import {
   TRegisterFormNameInput,
   TTodoCategories,
 } from "../types";
+import { ReactNode } from "react";
 
 // ** Shared validation interface
 interface IValidationRules {
@@ -200,4 +201,13 @@ export interface ITodoModals {
 export interface IErrorHandler {
   statusCode?: number;
   title?: string;
+}
+
+export interface IIconsContainer {
+  className?: string;
+  children?: ReactNode;
+}
+
+export interface IIcon extends React.SVGProps<SVGSVGElement> {
+  className?: string;
 }

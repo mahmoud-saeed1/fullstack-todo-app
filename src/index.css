@@ -80,3 +80,27 @@
 }
   
 /*~~~~~~~~$ End ShowError Styling $~~~~~~~~*/
+
+
+/*~~~~~~~~$ Start No Todos Styling $~~~~~~~~*/
+.no-todos__container {
+    @apply flex flex-col items-center justify-center text-center p-6 bg-white rounded-md;
+  }
+  
+  .no-todos__icon {
+    @apply w-16 h-16 text-blue-500 mb-4;
+  }
+  
+  .no-todos__title {
+    @apply text-2xl font-semibold text-gray-700 mb-2;
+  }
+  
+  .no-todos__message {
+    @apply text-gray-500 mb-6;
+  }
+  
+  .no-todos__button {
+    @apply bg-blue-600 text-white py-2 px-4 rounded-lg shadow-md transition-transform duration-200 hover:scale-105;
+  }
+  
+/*~~~~~~~~$ End No Todos Styling $~~~~~~~~*/
