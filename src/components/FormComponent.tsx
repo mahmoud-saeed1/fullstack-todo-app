@@ -48,7 +48,7 @@ const FormComponent = ({
       if (type === "create") {
         await axiosInstance.post(
           "todos",
-          { data },
+          { data: { ...data, user: [userData.user?.id] } },
           {
             headers: { Authorization: `Bearer ${userData.jwt}` },
           }

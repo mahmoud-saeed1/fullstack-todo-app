@@ -1,6 +1,6 @@
-import Modal from "../components/ui/Modal";
-import Input from "../components/ui/Input";
-import Button from "../components/ui/Button";
+import Modal from "./ui/Modal";
+import Input from "./ui/Input";
+import Button from "./ui/Button";
 import {
   IEditTodoFormValues,
   IUpdateTodoModal,
@@ -17,7 +17,7 @@ import { TODOS_CATEGORIES } from "../data";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { UpdateTodoSchema } from "../validations";
 
-const EditTodoModal = ({
+const UpdateTodoModal = ({
   isOpen,
   isLoading,
   todoToEdit,
@@ -137,4 +137,4 @@ const EditTodoModal = ({
   );
 };
 
-export default EditTodoModal;
+export default UpdateTodoModal;
