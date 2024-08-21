@@ -32,37 +32,51 @@
     }
 
 /*~~~~~~~~$ End Todos Styling $~~~~~~~~*/
-    
 
-.todo-skeleton__container {
-    @apply space-y-4;
-  }
+
+/*~~~~~~~~$ Start TodoSkeleton Styling $~~~~~~~~*/
+.error-handler__container {
+    @apply fixed inset-0 flex items-center justify-center p-5 w-full bg-gradient-to-r from-gray-800 via-gray-900 to-black; /* Dark gradient */
+}
   
-  .todo-skeleton__wrapper {
-    @apply flex items-center justify-between p-4 bg-gray-100 rounded-lg dark:bg-gray-800;
-  }
+.error-handler__content {
+    @apply text-center;
+}
   
-  .todo-skeleton__content {
-    @apply flex-1;
-  }
+.error-handler__icon-wrapper {
+    @apply inline-flex rounded-full p-4;
+}
   
-  .todo-skeleton__line {
-    @apply w-full h-4 rounded-full mb-2;
-  }
+.error-handler__icon-background {
+    @apply rounded-full stroke-red-600 bg-red-200 p-4; /* Darker background */
+}
   
-  .todo-skeleton__line--primary {
-    @apply bg-gray-200 dark:bg-gray-700;
-  }
+.error-handler__icon {
+    @apply w-16 h-16 text-red-300; /* Lighter icon color */
+}
   
-  .todo-skeleton__line--secondary {
-    @apply bg-gray-200 dark:bg-gray-700;
-  }
+.error-handler__title {
+    @apply mt-5 text-white text-[36px] font-bold lg:text-[50px];
+}
   
-  .todo-skeleton__buttons {
-    @apply flex items-center space-x-2;
-  }
+.error-handler__message {
+    @apply mt-5 text-gray-300 lg:text-lg; /* Lighter message color */
+}
   
-  .todo-skeleton__button {
-    @apply w-12 h-9 bg-gray-300 rounded-md dark:bg-gray-700;
-  }
+.error-handler__buttons {
+    @apply flex items-center justify-center space-x-4 my-10;
+}
   
+.error-handler__button {
+    @apply inline-block bg-gray-700 text-indigo-200 p-2 rounded-md shadow-lg transition duration-300 ease-in-out transform hover:scale-105 hover:bg-indigo-600 hover:text-white; /* Dark button */
+}
+  
+.error-handler__button--home {
+    @apply bg-indigo-600 text-white;
+}
+  
+.error-handler__button--refresh {
+    @apply bg-purple-600 text-white;
+}
+  
+/*~~~~~~~~$ End ShowError Styling $~~~~~~~~*/

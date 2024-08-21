@@ -8,6 +8,7 @@ import TodoList from "../components/TodoList";
 import useModal from "../hooks/useModal";
 import TodoModals from "../components/TodoModals";
 import TodoSkeleton from "../components/TodoSkeleton";
+import ErrorHandler from "../components/errors/ErrorHandler";
 
 const Todos = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -35,7 +36,7 @@ const Todos = () => {
   });
 
   if (isPending) return <TodoSkeleton />;
-  if (error) return "An error has occurred: " + error.message;
+  if (error) return <ErrorHandler title={error.message} />;
 
   return (
     <div className="flex flex-col items-center justify-center p-6">

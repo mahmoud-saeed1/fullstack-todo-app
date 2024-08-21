@@ -196,3 +196,8 @@ export interface ITodoModals {
   handleModalClose: (type: "create" | "update" | "delete" | "view") => void; // Updated type
   resetTodo: () => void;
 }
+
+export interface IErrorHandler {
+  statusCode?: number;
+  title?: string;
+}

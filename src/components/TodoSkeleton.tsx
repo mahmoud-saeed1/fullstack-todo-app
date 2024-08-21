@@ -1,11 +1,7 @@
 import { m, LazyMotion, domAnimation } from "framer-motion";
 import "../index.css";
 
-type TodoSkeletonProps = {
-  count?: number;
-};
-
-const TodoSkeleton = ({ count = 5 }: TodoSkeletonProps) => {
+const TodoSkeleton = ({ count = 5 }: { count?: number }) => {
   const skeletons = Array.from({ length: count });
 
   return (
