@@ -7,6 +7,7 @@ import { DEFAULT_TODO_OBJ } from "../data";
 import TodoList from "../components/TodoList";
 import useModal from "../hooks/useModal";
 import TodoModals from "../components/TodoModals";
+import TodoSkeleton from "../components/TodoSkeleton";
 
 const Todos = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -33,7 +34,7 @@ const Todos = () => {
     config: { headers: { Authorization: `Bearer ${userData.jwt}` } },
   });
 
-  if (isPending) return "Loading...";
+  if (isPending) return <TodoSkeleton />;
   if (error) return "An error has occurred: " + error.message;
 
   return (
@@ -60,7 +61,6 @@ const Todos = () => {
         <h1 className="text-xl font-bold text-gray-500">No todos added</h1>
       )}
 
-      {/* Using TodoModals Component */}
       <TodoModals
         openCreateModal={openCreateModal}
         openUpdateModal={openUpdateModal}

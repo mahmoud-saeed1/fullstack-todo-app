@@ -1,0 +1,29 @@
+import axiosInstance from "../config/axios.config";
+import { faker } from "@faker-js/faker";
+
+
+/*~~~~~~~~$ Fake todos Generation $~~~~~~~~*/
+  const generateTodosHandlers = async () => {
+    for (let index = 0; index < 100; index++) {
+      try {
+        await axiosInstance.post(
+          "todos",
+          {
+            data: {
+              title: faker.word.words(5),
+              description: faker.lorem.paragraph(2),
+              user: [userData.user?.id],
+            },
+          },
+          {
+            headers: { Authorization: `Bearer ${userData.jwt}` },
+          }
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  };
+
+
+    <Button onClick={generateTodosHandlers}>Generate Todos</Button>
