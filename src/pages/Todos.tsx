@@ -35,12 +35,12 @@ const Todos = () => {
     config: { headers: { Authorization: `Bearer ${userData.jwt}` } },
   });
 
+
   if (isPending) return <TodoSkeleton />;
   if (error) return <ErrorHandler title={error.message} />;
 
   return (
     <div className="flex flex-col items-center justify-center p-6">
-
       {data?.todos?.length ? (
         <TodoList
           todos={data.todos}
@@ -77,7 +77,6 @@ const Todos = () => {
 };
 
 export default Todos;
-
 
 // !~~~~~~~~$ Static Way to Do CRUD Operation $~~~~~~~~!
 

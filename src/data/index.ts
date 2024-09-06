@@ -1,8 +1,20 @@
 import {
+  Coding,
+  Education,
+  Fitness,
+  Man,
+  Shopping,
+  TodosIcon,
+  Vitamins,
+  Wallet,
+  Worship,
+} from "../icons";
+import {
   ILogInFormInputs,
   IRegisterInputs,
   ITodoCategory,
   ITodo,
+  IUserData,
 } from "../interfaces";
 
 export const REGISTER_FORM: IRegisterInputs[] = [
@@ -55,3 +67,21 @@ export const DEFAULT_TODO_OBJ: ITodo = {
   description: "",
   completed: false,
 };
+
+export const CATEGORIES_ICONS = [
+  { id: 0, icon: TodosIcon, label: "all" },
+  { id: 1, icon: Man, label: "personal" },
+  { id: 2, icon: Coding, label: "code" },
+  { id: 3, icon: Education, label: "learning" },
+  { id: 5, icon: Fitness, label: "fitness" },
+  { id: 6, icon: Shopping, label: "shopping" },
+  { id: 7, icon: Vitamins, label: "work" },
+  { id: 8, icon: Wallet, label: "general" },
+  { id: 9, icon: Worship, label: "worship" },
+];
+
+const storageKey = "loggedInUser";
+const userDataString = localStorage.getItem(storageKey);
+export const USERDATA: IUserData = userDataString
+  ? JSON.parse(userDataString)
+  : null;

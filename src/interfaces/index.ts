@@ -62,14 +62,14 @@ export interface IUseReactQuery {
 
 export interface ITodo {
   id: number;
-  category?: string; 
+  category?: string;
   title: string;
   description?: string;
   completed?: boolean;
 }
 
-export interface IDynamicFrom{
-  category?: string; 
+export interface IDynamicFrom {
+  category?: string;
   title: string;
   description?: string;
 }
@@ -210,4 +210,15 @@ export interface IIconsContainer {
 
 export interface IIcon extends React.SVGProps<SVGSVGElement> {
   className?: string;
+}
+
+export interface IUserData {
+  id: number;
+  username: string;
+  email: string;
+  provider: string;
+  confirmed: boolean;
+  blocked: boolean;
+  createdAt: string; // ISO 8601 date string
+  updatedAt: string; // ISO 8601 date string
 }

@@ -7,7 +7,7 @@ import ProtectedRoute from "../components/auth/ProtectedRoute";
 import PageNotFound from "../pages/PageNotFound";
 import RootLayout from "../pages/Layout";
 import ErrorHandler from "../components/errors/ErrorHandler";
-import HomePage from "../pages";
+import Home from "../pages";
 import LogIn from "../pages/LogIn";
 import Register from "../pages/Register";
 import Todos from "../pages/Todos";
@@ -29,7 +29,7 @@ const router = createBrowserRouter(
               redirectPath="/login"
               data={userData}
             >
-              <HomePage />
+              <Home />
             </ProtectedRoute>
           }
         />

@@ -13,6 +13,8 @@ const Navbar = () => {
   };
   return (
     <nav className="max-w-lg mx-auto mt-7 mb-20 px-3 py-5 rounded-md">
+      <div className="bg-blue-500 w-full h-60 absolute top-0 left-0 rounded-b-[3rem] -z-10" />
+
       <ul className="flex items-center justify-between">
         <li className="text-black duration-200 font-semibold text-lg">
           <NavLink to="/">Home</NavLink>

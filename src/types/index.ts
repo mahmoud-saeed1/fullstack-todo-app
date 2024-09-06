@@ -12,3 +12,14 @@ export type TTodoCategories =
   | "health"
   | "shopping"
   | "worship";
+
+export type CategoryLabel =
+  | "personal"
+  | "code"
+  | "learning"
+  | "neurologist"
+  | "fitness"
+  | "shopping"
+  | "work"
+  | "general"
+  | "worship";
